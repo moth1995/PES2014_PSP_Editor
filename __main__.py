@@ -74,6 +74,14 @@ class SettingsWindow(tk.Toplevel):
         with open(file, 'rb') as f:
             return(f.read()[:4])
 
+    @staticmethod
+    def get_ext(folder,header):
+        if folder == './input/MTEXT' and header==b'\x00\x06\x01\x00':
+            return '.str'
+        elif  folder == './input/MTEXT' and header==b'\x00\x02\x00\x00':
+            return '.txs'
+        raise NotImplementedError
+
     def open(self):
         '''
         Extract all cpk files into a temp folder using extract_cpk method and
@@ -81,6 +89,13 @@ class SettingsWindow(tk.Toplevel):
         '''
         for file in self.files:
             self.extract_cpk(self.dir + file)
+        # Here we rename to the correct extension of file
+        for folder in self.folders:
+            files_in_folder = [folder + '/' + x for x in os.listdir(folder)]
+            for file in files_in_folder:
+                ext = self.get_ext(folder,self.read_header(file))
+                os.rename(file,file + ext)
+                
         app.deiconify()
         self.destroy()
 
