@@ -12,12 +12,28 @@ class SettingsWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.dir = r'..\input\\'
+        # for my own testing
+        #self.dir = r'E:\XDM\input\\'
         self.files = ['0SOUND.cpk',
                     '0TEXT.cpk',
                     'MSOUND.cpk',
                     'MTEXT.cpk',
                     'OVER.cpk',
                         ]
+        
+        self.folders = ['./input/0SOUND',
+                    './input/0TEXT',
+                    './input/MSOUND',
+                    './input/MTEXT',
+                    './input/OVER']
+        '''
+        # for my own testing
+        self.folders = ['E:/XDM/input/0SOUND',
+                    'E:/XDM/input/0TEXT',
+                    'E:/XDM/input/MSOUND',
+                    'E:/XDM/input/MTEXT',
+                    'E:/XDM/input/OVER']
+        '''
         self.geometry('400x300')
         self.title('PES2014 PSP Editor Config')
         self.open_btn = ttk.Button(self,
@@ -49,6 +65,14 @@ class SettingsWindow(tk.Toplevel):
         '''
         YACT = r'utils\YACpkTool.exe'
         os.system(YACT + ' '  + cpk)
+
+    @staticmethod
+    def read_header(file):
+        '''
+        Read the first 4 bytes from a file to recognize and return them
+        '''
+        with open(file, 'rb') as f:
+            return(f.read()[:4])
 
     def open(self):
         '''
