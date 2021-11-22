@@ -59,7 +59,6 @@ class SettingsWindow(tk.Toplevel):
         print(cpk)
         print(cpk.split('/')[-1].split('.')[0])
         cur_dir = os.path.abspath(".")
-        print(cur_dir)
         os.system(CPKMAKERC + ' \"'  + cpk +'\" -extract=\"' + cur_dir + '/input/' + cpk.split('/')[-1].split('.')[0] + '\"')
 
     @staticmethod
@@ -90,6 +89,11 @@ class SettingsWindow(tk.Toplevel):
         for folder in self.folders:
             files_in_folder = [self.dir + folder + '/' + x for x in os.listdir(self.dir + folder)]
             for file in files_in_folder:
+                ext = self.get_ext(self.dir + folder,self.read_header(file))
+                try:
+                    os.rename(file,file + ext)
+                except OSError:
+                    showerror(message=f'You must delete files inside the {folder} folder before running the program again\nThe program will close now')
         app.deiconify()
         self.destroy()
 
