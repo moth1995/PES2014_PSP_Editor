@@ -55,9 +55,6 @@ class SettingsWindow(tk.Toplevel):
         '''
         YACT = r'utils\YACpkTool.exe'
         CPKMAKERC = r'utils\cpkmakec.exe'
-        #os.system(YACT + ' '  + cpk)
-        print(cpk)
-        print(cpk.split('/')[-1].split('.')[0])
         cur_dir = os.path.abspath(".")
         os.system(CPKMAKERC + ' \"'  + cpk +'\" -extract=\"' + cur_dir + '/input/' + cpk.split('/')[-1].split('.')[0] + '\"')
 
