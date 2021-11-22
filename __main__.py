@@ -76,6 +76,13 @@ class SettingsWindow(tk.Toplevel):
 
     @staticmethod
     def get_ext(folder,header):
+        '''
+        Return extension file according to the header and the folder from where it comes
+        '''
+        if folder == './input/MTEXT' and header == b'\x00\x06\x01\x00': return '.str'
+        elif  folder == './input/MTEXT' and header == b'\x00\x02\x00\x00': return '.txs'
+        elif folder == './input/OVER' and header == b'MWo3': return '.ovl'
+        else: return '.bin'
 
     def open(self):
         '''
