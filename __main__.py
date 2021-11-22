@@ -92,8 +92,8 @@ class SettingsWindow(tk.Toplevel):
         for file in self.files:
             self.extract_cpk(self.dir + file)
         # Here we rename to the correct extension of file
-        for folder in self.dir + self.folders:
-            files_in_folder = [folder + '/' + x for x in os.listdir(folder)]
+        for folder in self.folders:
+            files_in_folder = [self.dir + folder + '/' + x for x in os.listdir(self.dir + folder)]
             for file in files_in_folder:
                 ext = self.get_ext(folder,self.read_header(file))
                 os.rename(file,file + ext)
