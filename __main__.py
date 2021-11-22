@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.constants import DISABLED
-from tkinter.messagebox import showinfo, showerror, showwarning
+from tkinter.messagebox import showinfo, showerror, showwarning, askokcancel
 import os
 
 class SettingsWindow(tk.Toplevel):
@@ -12,8 +12,6 @@ class SettingsWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.dir = './input/'
-        # for my own testing
-        #self.dir = r'E:\XDM\input\\'
         self.files = ['0SOUND.cpk',
                     '0TEXT.cpk',
                     'MSOUND.cpk',
@@ -26,14 +24,6 @@ class SettingsWindow(tk.Toplevel):
                     'MSOUND',
                     'MTEXT',
                     'OVER']
-        '''
-        # for my own testing
-        self.folders = ['E:/XDM/input/0SOUND',
-                    'E:/XDM/input/0TEXT',
-                    'E:/XDM/input/MSOUND',
-                    'E:/XDM/input/MTEXT',
-                    'E:/XDM/input/OVER']
-        '''
         self.geometry('400x300')
         self.title('PES2014 PSP Editor Config')
         self.open_btn = ttk.Button(self,
@@ -64,7 +54,13 @@ class SettingsWindow(tk.Toplevel):
         into a temp folder where we extract our files
         '''
         YACT = r'utils\YACpkTool.exe'
-        os.system(YACT + ' '  + cpk)
+        CPKMAKERC = r'utils\cpkmakec.exe'
+        #os.system(YACT + ' '  + cpk)
+        print(cpk)
+        print(cpk.split('/')[-1].split('.')[0])
+        cur_dir = os.path.abspath(".")
+        print(cur_dir)
+        os.system(CPKMAKERC + ' \"'  + cpk +'\" -extract=\"' + cur_dir + '/input/' + cpk.split('/')[-1].split('.')[0] + '\"')
 
     @staticmethod
     def read_header(file):
@@ -79,7 +75,6 @@ class SettingsWindow(tk.Toplevel):
         '''
         Return extension file according to the header and the folder from where it comes
         '''
-        if folder == './input/MTEXT' and header == b'\x00\x06\x01\x00': return '.str'
         elif  folder == './input/MTEXT' and header == b'\x00\x02\x00\x00': return '.txs'
         elif folder == './input/OVER' and header == b'MWo3': return '.ovl'
         else: return '.bin'
@@ -95,9 +90,6 @@ class SettingsWindow(tk.Toplevel):
         for folder in self.folders:
             files_in_folder = [self.dir + folder + '/' + x for x in os.listdir(self.dir + folder)]
             for file in files_in_folder:
-                ext = self.get_ext(folder,self.read_header(file))
-                os.rename(file,file + ext)
-                
         app.deiconify()
         self.destroy()
 
@@ -116,11 +108,15 @@ class App(tk.Tk):
         self.geometry('800x600')
         self.title('Main Window')
         self.open_window()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
 
     def open_window(self):
         settings_window = SettingsWindow(self)
         settings_window.grab_set()
+    def on_closing(self):
+        if askokcancel("Quit", "Do you want to quit?"):
+            self.destroy()
 
 
 if __name__ == '__main__':
