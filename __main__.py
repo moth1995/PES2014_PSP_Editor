@@ -11,7 +11,7 @@ class SettingsWindow(tk.Toplevel):
     '''
     def __init__(self, parent):
         super().__init__(parent)
-        self.dir = r'..\input\\'
+        self.dir = './input/'
         # for my own testing
         #self.dir = r'E:\XDM\input\\'
         self.files = ['0SOUND.cpk',
@@ -21,11 +21,11 @@ class SettingsWindow(tk.Toplevel):
                     'OVER.cpk',
                         ]
         
-        self.folders = ['./input/0SOUND',
-                    './input/0TEXT',
-                    './input/MSOUND',
-                    './input/MTEXT',
-                    './input/OVER']
+        self.folders = ['0SOUND',
+                    '0TEXT',
+                    'MSOUND',
+                    'MTEXT',
+                    'OVER']
         '''
         # for my own testing
         self.folders = ['E:/XDM/input/0SOUND',
@@ -76,11 +76,6 @@ class SettingsWindow(tk.Toplevel):
 
     @staticmethod
     def get_ext(folder,header):
-        if folder == './input/MTEXT' and header==b'\x00\x06\x01\x00':
-            return '.str'
-        elif  folder == './input/MTEXT' and header==b'\x00\x02\x00\x00':
-            return '.txs'
-        raise NotImplementedError
 
     def open(self):
         '''
@@ -90,7 +85,7 @@ class SettingsWindow(tk.Toplevel):
         for file in self.files:
             self.extract_cpk(self.dir + file)
         # Here we rename to the correct extension of file
-        for folder in self.folders:
+        for folder in self.dir + self.folders:
             files_in_folder = [folder + '/' + x for x in os.listdir(folder)]
             for file in files_in_folder:
                 ext = self.get_ext(folder,self.read_header(file))
