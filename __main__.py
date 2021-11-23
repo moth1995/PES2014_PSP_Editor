@@ -53,11 +53,25 @@ class SettingsWindow(tk.Toplevel):
         Read the first 4 bytes from a file to recognize and return them
         '''
         with open(file, 'rb') as f:
+            return(f.read()[:32])
 
     @staticmethod
+    def get_ext(header):
         '''
         Return extension file according to the header and the folder from where it comes
         '''
+        if header[:4] == b'\x00\x06\x01\x00' and header[8:12] == b'\xe0,\x02\x00': return '.pkit'
+        elif header[:4] == b'\x00\x06\x01\x00': return '.str'
+        elif header[:4] == b'\x00\x0e\x01\x00': return '.opd'
+        elif header[:4] == b'\x03\x05\x00\x00': return '.unk'
+        elif header[:4] == b'\x00\x01\x01\x00': return '.fnt'
+        elif header[:4] == b'\x89PNG': return '.png'
+        elif header[:4] == b'SdDt': return '.sddt'
+        elif header[:4] == b'IECS': return '.iecs'
+        elif header[:4] == b'aPDT': return '.apdt'
+        elif header[:4] == b'RIFF': return '.at3'
+        elif header[:4] == b'\x00\x02\x00\x00': return '.txs'
+        elif header[:4] == b'MWo3': return '.ovl'
         else: return '.bin'
 
     def open(self):
@@ -71,6 +85,7 @@ class SettingsWindow(tk.Toplevel):
         for folder in self.folders:
             files_in_folder = [self.dir + folder + '/' + x for x in os.listdir(self.dir + folder)]
             for file in files_in_folder:
+                ext = self.get_ext(self.read_header(file))
                 try:
                     os.rename(file,file + ext)
                 except OSError:
