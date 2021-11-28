@@ -110,6 +110,7 @@ def get_uncompress_files(header,data,num_of_files,data_size):
 
 def decompress(file):
     name = get_name_from_path(file)
+    folder = os.path.dirname(os.path.abspath(file))
     content = file_read(file)
     header = content[:32]
     data = content[32:]
@@ -124,7 +125,8 @@ def decompress(file):
         '''
         IF we fall here then it's a pes .str file the ones that contains text for the game
         '''
-        with open(f'{name}_{0:03}','wb') as s: s.write(unzlib_it(data))
+        filename = f'{name}_{0:03}'
+        with open(folder + '/' +filename,'wb') as s: s.write(unzlib_it(data))
     else:
         '''
         If we get here then we got a compress pes file, it could be one with textures for the game 
@@ -134,6 +136,6 @@ def decompress(file):
         filenames = get_filenames(header,data,num_of_files,name)
         files_data = get_uncompress_files(header,data,num_of_files,data_size)
         for filenumber,file in enumerate(files_data):
-            with open(filenames[filenumber],'wb') as s: s.write(file)
+            with open(folder + '/' + filenames[filenumber],'wb') as s: s.write(file)
 
-decompress('./input/0TEXT/ID00051.bin')
+decompress('./input/MTEXT/ID00005.str')
